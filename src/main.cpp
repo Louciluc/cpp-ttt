@@ -63,7 +63,7 @@ int has_single_bit_at(int integer) {
 int check_won(int * grid, int size) {
     int* verticalIsInLine = new int[size + 2]; // +2 to add the diagonals to this array at the end
     cout << "before for i" << endl;
-    for (int i = 0; 0 < size; i++) { verticalIsInLine[i] = 0; }
+    for (int i = 0; i < size; i++) { verticalIsInLine[i] = 0; }
     cout << "after for i" << endl;
     int firstDiagonal = 0;
     int seconDiagonal = 0;
