@@ -1,0 +1,1 @@
+/usr/bin/clang++ -Xlinker --dependency-file=CMakeFiles/tic-tac-toe.dir/link.d "CMakeFiles/tic-tac-toe.dir/src/main.cpp.o" -o tic-tac-toe
