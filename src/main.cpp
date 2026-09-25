@@ -6,21 +6,23 @@
 using namespace std;
 
 #include <cstdint>
-using i16 = int16_t;
-using i32 = int32_t;
-using i64 = int64_t;
+//using i16 = int16_t;
+//using i32 = int32_t;
+//using i64 = int64_t;
 using isize = intmax_t;
-using iptr = intptr_t;
+//using iptr = intptr_t;
 
-using u16 = uint16_t;
-using u32 = uint32_t;
-using u64 = uint64_t;
+//using u16 = uint16_t;
+//using u32 = uint32_t;
+//using u64 = uint64_t;
 using usize = uintmax_t;
 
 // In dieser Datei wird ein 2D-Array in einem 1D-Array verwendet, für das C feeling
 
-const usize PLAYERCOUNT = 4;
-const char player_symbols[PLAYERCOUNT + 1] = {' ', 'X', 'O', 'I', 'U'};
+const usize PLAYERCOUNT = 2;
+const char player_symbols[PLAYERCOUNT + 1] = {' ', 'X', 'O'
+    //, 'I', 'U' // player 3 and 4
+};
 
 string repeatString(const string & str, usize n) {
     string result;
@@ -122,6 +124,14 @@ usize check_won(usize * grid, usize size) {
     return 0;
 }
 
+bool check_draw(const usize * grid, usize size){
+    usize allEntries = 0;
+    for (usize i = 0; i < size * size; i++) {
+        allEntries |= 1 << grid[i];
+    }
+    return !(allEntries & 1);
+}
+
 usize getInputUsize(const string & question) {
     usize out = 0;
     do {
@@ -146,14 +156,25 @@ std::tuple<usize, usize> getCoordsInput(){
 }
 
 void game() {
+game_size:
+    usize size = getInputUsize("How big do you want your tic-tac-toe? ");
+    if (size == 0) size = 3;
+    else if (size > 0 && size < 3) {
+        cout 
+            << endl
+            << "invalid input: The tic-tac-toe cannot have the size of 1 or 2, since it would be unplayable, try again" 
+            << endl << endl;
+        goto game_size;
+    }
+
     usize winner = 0;
-    usize size = 4;
     usize * play_grid = new_empty_array(size);
     usize active_player = PLAYERCOUNT;
+    cout << endl;
 
     do {
         active_player = !(active_player/PLAYERCOUNT) * active_player + 1; // Increment by one and return to 1 at max player count - cheesy :)
-        cout << "Next player: " << player_symbols[active_player] << endl;
+        cout << endl << endl << "Next player: " << player_symbols[active_player] << endl;
     ask_for_coords:
         printGrid(play_grid, size);
         std::tuple<usize, usize> coords = getCoordsInput();
@@ -170,17 +191,33 @@ void game() {
         // all inputs are expected to be correct at this point
         writeElementAt(play_grid, size, std::get<0>(coords), std::get<1>(coords), active_player);
         winner = check_won(play_grid, size);
-        cout << endl << endl;
+        if (check_draw(play_grid, size)) break;
 
     } while (winner == 0);
-    cout << "Winner is: " << player_symbols[active_player] << endl;
+    cout << endl << endl;
+    if (winner == 0) {
+        // Got here by DRAW, no winner
+        cout << "DRAW" << endl;
+    }
+    else {
+        cout << "Winner is: " << player_symbols[active_player] << endl;
+    }
     printGrid(play_grid, size);
 
     delete [] play_grid;
 }
 
 int main() {
+    usize * test_grid = new usize[] {
+        1,1,2,
+        2,2,1,
+        1,2,1,
+    };
+    cout << endl;
+
     game();
+
+    delete [] test_grid;
     cout << "Exiting" << endl;
     return 0;
 }
