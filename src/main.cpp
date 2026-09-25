@@ -1,11 +1,7 @@
 #include <iostream>
 #include <limits>
 #include <string>
-
-// Debug:
-#include <bitset>
 #include <tuple>
-
 
 using namespace std;
 
@@ -23,8 +19,8 @@ using usize = uintmax_t;
 
 // In dieser Datei wird ein 2D-Array in einem 1D-Array verwendet, für das C feeling
 
-const usize PLAYERCOUNT = 2;
-const char player_symbols[PLAYERCOUNT + 1] = {' ', 'X', 'O'/*, 'I', 'U'*/};
+const usize PLAYERCOUNT = 4;
+const char player_symbols[PLAYERCOUNT + 1] = {' ', 'X', 'O', 'I', 'U'};
 
 string repeatString(const string & str, usize n) {
     string result;
@@ -151,14 +147,14 @@ std::tuple<usize, usize> getCoordsInput(){
 
 void game() {
     usize winner = 0;
-    usize size = 3;
+    usize size = 4;
     usize * play_grid = new_empty_array(size);
     usize active_player = PLAYERCOUNT;
 
     do {
+        active_player = !(active_player/PLAYERCOUNT) * active_player + 1; // Increment by one and return to 1 at max player count - cheesy :)
         cout << "Next player: " << player_symbols[active_player] << endl;
     ask_for_coords:
-        active_player = !(active_player/PLAYERCOUNT) * active_player + 1; // Increment by one and return to 1 at max player count - cheesy :)
         printGrid(play_grid, size);
         std::tuple<usize, usize> coords = getCoordsInput();
         cout << "(" << std::get<0>(coords) << "," << std::get<1>(coords) << ")" << endl;
