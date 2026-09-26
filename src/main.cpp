@@ -36,7 +36,7 @@ string spacingLinePlus(usize size) {
     return repeatString("+   ", size) + "+\n";
 }
 
-usize* new_array(usize size) {
+inline usize* new_array(usize size) {
     return new usize[size * size];
 }
 
